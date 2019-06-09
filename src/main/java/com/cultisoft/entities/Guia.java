@@ -13,9 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "cultivo")
-public class Cultivo {
-
+@Table(name = "guia")
+public class Guia {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -24,30 +23,26 @@ public class Cultivo {
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 
-	private String clave;
-
 	private String nombre;
 
 	private String descripcion;
 
+	private String tipo;
+
 	@ManyToMany
 	@JoinTable(
-			name = "cultivo_variable",
+			name = "guia_variable",
 			joinColumns = @JoinColumn(name = "id_cultivo"),
 			inverseJoinColumns = @JoinColumn(name = "id_variable"))
-	private List<Variable> variables;
+	List<Variable> variables;
 
-	public Cultivo() {
-	}
-	
-	public Cultivo(Integer id, Usuario usuario, String clave, String nombre, String descripcion,
-			List<Variable> variables) {
+	public Guia(Integer id, Usuario usuario, String nombre, String descripcion, String tipo, List<Variable> variables) {
 		super();
 		this.id = id;
 		this.usuario = usuario;
-		this.clave = clave;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
+		this.tipo = tipo;
 		this.variables = variables;
 	}
 
@@ -57,6 +52,14 @@ public class Cultivo {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getNombre() {
@@ -75,25 +78,17 @@ public class Cultivo {
 		this.descripcion = descripcion;
 	}
 
-	public String getClave() {
-		return clave;
+	public String getTipo() {
+		return tipo;
 	}
 
-	public void setClave(String clave) {
-		this.clave = clave;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	@Override
 	public String toString() {
-		return "Cultivo [id=" + id + ", usuario=" + usuario + ", clave=" + clave + ", nombre=" + nombre
-				+ ", descripcion=" + descripcion + "]";
+		return "Guia [id=" + id + ", usuario=" + usuario + ", nombre=" + nombre + ", descripcion=" + descripcion
+				+ ", tipo=" + tipo + ", variables=" + variables + "]";
 	}
 }
