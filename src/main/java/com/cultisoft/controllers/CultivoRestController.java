@@ -21,16 +21,16 @@ public class CultivoRestController {
 	@Autowired(required = true)
 	CultivoService cultivoService;
 
-	@PostMapping(path = "/getCultivos", headers = "Accept=application/json")
-	public Cultivo getCultivo() {
-		return new Cultivo(1, null, "clave", "nombre", "descripcion", new ArrayList());
-
-	}
+//	@PostMapping(path = "/getCultivos", headers = "Accept=application/json")
+//	public Cultivo getCultivo() {
+//		return new Cultivo(1, null, "clave", "nombre", "descripcion", new ArrayList());
+//
+//	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Cultivo getById(@PathVariable("id") String id) {
-		String clave = id.equals("1") ? "clave de 1" : "esta no es clave de 1";
-		return new Cultivo(1, null, clave, "nombre", "descripcion", new ArrayList());
+		Cultivo culti = cultivoService.buscar(id);
+		return culti;//new Cultivo(1, null, clave, "nombre", "descripcion", new ArrayList());
 
 	}
 

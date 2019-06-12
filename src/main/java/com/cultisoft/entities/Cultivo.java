@@ -18,7 +18,7 @@ public class Cultivo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "id_usuario")
@@ -40,7 +40,7 @@ public class Cultivo {
 	public Cultivo() {
 	}
 	
-	public Cultivo(Integer id, Usuario usuario, String clave, String nombre, String descripcion,
+	public Cultivo(Long id, Usuario usuario, String clave, String nombre, String descripcion,
 			List<Variable> variables) {
 		super();
 		this.id = id;
@@ -51,11 +51,11 @@ public class Cultivo {
 		this.variables = variables;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
