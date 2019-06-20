@@ -1,14 +1,10 @@
 package com.cultisoft.entities;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -30,25 +26,16 @@ public class Cultivo {
 
 	private String descripcion;
 
-	@ManyToMany
-	@JoinTable(
-			name = "cultivo_variable",
-			joinColumns = @JoinColumn(name = "id_cultivo"),
-			inverseJoinColumns = @JoinColumn(name = "id_variable"))
-	private List<Variable> variables;
-
 	public Cultivo() {
 	}
-	
-	public Cultivo(Long id, Usuario usuario, String clave, String nombre, String descripcion,
-			List<Variable> variables) {
+
+	public Cultivo(Long id, Usuario usuario, String clave, String nombre, String descripcion) {
 		super();
 		this.id = id;
 		this.usuario = usuario;
 		this.clave = clave;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.variables = variables;
 	}
 
 	public Long getId() {

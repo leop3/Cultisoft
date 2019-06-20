@@ -14,19 +14,19 @@ public class Puntuacion {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "id_guia")
-	Guia guia;
+	private Guia guia;
 
 	@ManyToOne
 	@JoinColumn(name = "id_usuario")
-	Usuario usuario;
+	private Usuario usuario;
 
-	Integer puntuacion;
+	private Integer puntuacion;
 
-	public Puntuacion(Integer id, Guia guia, Usuario usuario, Integer puntuacion) {
+	public Puntuacion(Long id, Guia guia, Usuario usuario, Integer puntuacion) {
 		super();
 		this.id = id;
 		this.guia = guia;
@@ -37,11 +37,11 @@ public class Puntuacion {
 	public Puntuacion() {
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

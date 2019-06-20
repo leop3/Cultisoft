@@ -1,14 +1,10 @@
 package com.cultisoft.entities;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -17,7 +13,7 @@ import javax.persistence.Table;
 public class Guia {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "id_usuario")
@@ -29,28 +25,39 @@ public class Guia {
 
 	private String tipo;
 
-	@ManyToMany
-	@JoinTable(
-			name = "guia_variable",
-			joinColumns = @JoinColumn(name = "id_cultivo"),
-			inverseJoinColumns = @JoinColumn(name = "id_variable"))
-	List<Variable> variables;
+	private Double temperaturaMinima;
 
-	public Guia(Integer id, Usuario usuario, String nombre, String descripcion, String tipo, List<Variable> variables) {
+	private Double temperaturaMaxima;
+
+	private Double humedadMinima;
+
+	private Double humedadMaxima;
+
+	private Double luzDesde;
+
+	private Double luzHasta;
+
+	public Guia(Long id, Usuario usuario, String nombre, String descripcion, String tipo, Double temperaturaMinima,
+			Double temperaturaMaxima, Double humedadMinima, Double humedadMaxima, Double luzDesde, Double luzHasta) {
 		super();
 		this.id = id;
 		this.usuario = usuario;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.tipo = tipo;
-		this.variables = variables;
+		this.temperaturaMinima = temperaturaMinima;
+		this.temperaturaMaxima = temperaturaMaxima;
+		this.humedadMinima = humedadMinima;
+		this.humedadMaxima = humedadMaxima;
+		this.luzDesde = luzDesde;
+		this.luzHasta = luzHasta;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -86,9 +93,52 @@ public class Guia {
 		this.tipo = tipo;
 	}
 
-	@Override
-	public String toString() {
-		return "Guia [id=" + id + ", usuario=" + usuario + ", nombre=" + nombre + ", descripcion=" + descripcion
-				+ ", tipo=" + tipo + ", variables=" + variables + "]";
+	public Double getTemperaturaMinima() {
+		return temperaturaMinima;
 	}
+
+	public void setTemperaturaMinima(Double temperaturaMinima) {
+		this.temperaturaMinima = temperaturaMinima;
+	}
+
+	public Double getTemperaturaMaxima() {
+		return temperaturaMaxima;
+	}
+
+	public void setTemperaturaMaxima(Double temperaturaMaxima) {
+		this.temperaturaMaxima = temperaturaMaxima;
+	}
+
+	public Double getHumedadMinima() {
+		return humedadMinima;
+	}
+
+	public void setHumedadMinima(Double humedadMinima) {
+		this.humedadMinima = humedadMinima;
+	}
+
+	public Double getHumedadMaxima() {
+		return humedadMaxima;
+	}
+
+	public void setHumedadMaxima(Double humedadMaxima) {
+		this.humedadMaxima = humedadMaxima;
+	}
+
+	public Double getLuzDesde() {
+		return luzDesde;
+	}
+
+	public void setLuzDesde(Double luzDesde) {
+		this.luzDesde = luzDesde;
+	}
+
+	public Double getLuzHasta() {
+		return luzHasta;
+	}
+
+	public void setLuzHasta(Double luzHasta) {
+		this.luzHasta = luzHasta;
+	}
+
 }

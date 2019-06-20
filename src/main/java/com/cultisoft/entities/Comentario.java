@@ -14,7 +14,7 @@ public class Comentario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer id;
+	Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "id_guia")
@@ -26,7 +26,7 @@ public class Comentario {
 
 	String comentario;
 
-	public Comentario(Integer id, Guia guia, Usuario usuario, String comentario) {
+	public Comentario(Long id, Guia guia, Usuario usuario, String comentario) {
 		super();
 		this.id = id;
 		this.guia = guia;
@@ -37,11 +37,11 @@ public class Comentario {
 	public Comentario() {
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

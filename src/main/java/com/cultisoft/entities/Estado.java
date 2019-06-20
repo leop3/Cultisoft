@@ -11,18 +11,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "comando")
-public class Comando {
+@Table(name = "estado")
+public class Estado {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "id_actuador")
-	private Actuador actuador;
-
-	private String tipo;
+	@JoinColumn(name = "id_sensor")
+	private Sensor sensor;
 
 	private Date fechaHora;
 
@@ -30,20 +28,16 @@ public class Comando {
 
 	private Date hasta;
 
-	private boolean confirmacion;
+	private Integer valor;
 
-	public Comando() {
-		super();
-	}
-
-	public Comando(Long id, String tipo, Date fechaHora, Date desde, Date hasta, boolean confirmacion) {
+	public Estado(Long id, Sensor sensor, Date fechaHora, Date desde, Date hasta, Integer valor) {
 		super();
 		this.id = id;
-		this.tipo = tipo;
+		this.sensor = sensor;
 		this.fechaHora = fechaHora;
 		this.desde = desde;
 		this.hasta = hasta;
-		this.confirmacion = confirmacion;
+		this.valor = valor;
 	}
 
 	public Long getId() {
@@ -54,20 +48,12 @@ public class Comando {
 		this.id = id;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public Sensor getSensor() {
+		return sensor;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public boolean isConfirmacion() {
-		return this.confirmacion;
-	}
-
-	public void setConfirmacion(boolean confirmacion) {
-		this.confirmacion = confirmacion;
+	public void setSensor(Sensor sensor) {
+		this.sensor = sensor;
 	}
 
 	public Date getFechaHora() {
@@ -92,6 +78,20 @@ public class Comando {
 
 	public void setHasta(Date hasta) {
 		this.hasta = hasta;
+	}
+
+	public Integer getValor() {
+		return valor;
+	}
+
+	public void setValor(Integer valor) {
+		this.valor = valor;
+	}
+
+	@Override
+	public String toString() {
+		return "Estado [id=" + id + ", sensor=" + sensor + ", fechaHora=" + fechaHora + ", desde=" + desde + ", hasta="
+				+ hasta + ", valor=" + valor + "]";
 	}
 
 }

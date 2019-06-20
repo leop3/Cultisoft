@@ -11,26 +11,28 @@ import javax.persistence.Table;
 public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
+
 	private String nombre;
+
 	private String password;
 
 	public Usuario() {
 		super();
 	}
 
-	public Usuario(Integer id, String nombre, String password) {
+	public Usuario(Long id, String nombre, String password) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.password = password;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

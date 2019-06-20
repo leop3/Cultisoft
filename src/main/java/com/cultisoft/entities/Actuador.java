@@ -1,5 +1,7 @@
 package com.cultisoft.entities;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,7 +16,7 @@ public class Actuador {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "id_cultivo")
@@ -24,25 +26,33 @@ public class Actuador {
 
 	private String tipo;
 
-	private boolean activo;
+	private boolean estado;
+
+	private Date activacionDesde;
+
+	private Date activacionHasta;
 
 	public Actuador() {
 		super();
 	}
 
-	public Actuador(Integer id, String descripcion, String tipo, boolean activo) {
+	public Actuador(Long id, Cultivo cultivo, String descripcion, String tipo, boolean estado, Date activacionDesde,
+			Date activacionHasta) {
 		super();
 		this.id = id;
+		this.cultivo = cultivo;
 		this.descripcion = descripcion;
 		this.tipo = tipo;
-		this.activo = activo;
+		this.estado = estado;
+		this.activacionDesde = activacionDesde;
+		this.activacionHasta = activacionHasta;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -62,12 +72,43 @@ public class Actuador {
 		this.tipo = tipo;
 	}
 
-	public boolean isActivo() {
-		return activo;
+	public Cultivo getCultivo() {
+		return cultivo;
 	}
 
-	public void setActivo(boolean activo) {
-		this.activo = activo;
+	public void setCultivo(Cultivo cultivo) {
+		this.cultivo = cultivo;
+	}
+
+	public boolean isEstado() {
+		return estado;
+	}
+
+	public void setEstado(boolean estado) {
+		this.estado = estado;
+	}
+
+	public Date getActivacionDesde() {
+		return activacionDesde;
+	}
+
+	public void setActivacionDesde(Date activacionDesde) {
+		this.activacionDesde = activacionDesde;
+	}
+
+	public Date getActivacionHasta() {
+		return activacionHasta;
+	}
+
+	public void setActivacionHasta(Date activacionHasta) {
+		this.activacionHasta = activacionHasta;
+	}
+
+	@Override
+	public String toString() {
+		return "Actuador [id=" + id + ", cultivo=" + cultivo + ", descripcion=" + descripcion + ", tipo=" + tipo
+				+ ", estado=" + estado + ", activacionDesde=" + activacionDesde + ", activacionHasta=" + activacionHasta
+				+ "]";
 	}
 
 }

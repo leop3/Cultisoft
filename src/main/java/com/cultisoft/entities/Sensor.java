@@ -13,32 +13,40 @@ import javax.persistence.Table;
 public class Sensor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
+	private Long id;
+
 	private String tipo;
-	
+
 	private String descripcion;
-	
+
+	private Integer valorMinimo;
+
+	private Integer valorMaximo;
+
 	@ManyToOne
 	@JoinColumn(name = "id_cultivo")
 	private Cultivo cultivo;
 
-	public Sensor(Integer id, String tipo, String descripcion) {
+	public Sensor(Long id, String tipo, String descripcion, Integer valorMinimo, Integer valorMaximo,
+			Cultivo cultivo) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
 		this.descripcion = descripcion;
+		this.valorMinimo = valorMinimo;
+		this.valorMaximo = valorMaximo;
+		this.cultivo = cultivo;
 	}
 
 	public Sensor() {
 		super();
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -56,6 +64,30 @@ public class Sensor {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public Integer getValorMinimo() {
+		return valorMinimo;
+	}
+
+	public void setValorMinimo(Integer valorMinimo) {
+		this.valorMinimo = valorMinimo;
+	}
+
+	public Integer getValorMaximo() {
+		return valorMaximo;
+	}
+
+	public void setValorMaximo(Integer valorMaximo) {
+		this.valorMaximo = valorMaximo;
+	}
+
+	public Cultivo getCultivo() {
+		return cultivo;
+	}
+
+	public void setCultivo(Cultivo cultivo) {
+		this.cultivo = cultivo;
 	}
 
 }
