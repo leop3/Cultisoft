@@ -1,7 +1,5 @@
 package com.cultisoft.controllers;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,14 +24,20 @@ public class CultivoRestController {
 //		return new Cultivo(1, null, "clave", "nombre", "descripcion", new ArrayList());
 //
 //	}
-
+	/**
+	 * 
+	 * Devuelve un cultivo con el id buscado. 
+	 */
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Cultivo getById(@PathVariable("id") String id) {
 		Cultivo culti = cultivoService.buscar(id);
 		return culti;//new Cultivo(1, null, clave, "nombre", "descripcion", new ArrayList());
 
 	}
-
+	/**
+	 * Guarda un cultivo en la base de datos.
+	 * 
+	 */
 	@PostMapping(path = "/insertCultivo")
 	public void insertarCultivo(@RequestBody Cultivo culti) {
 		cultivoService.agregar(culti);
