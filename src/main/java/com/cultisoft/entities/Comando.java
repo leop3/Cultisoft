@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "comando")
@@ -32,8 +33,23 @@ public class Comando {
 
 	private boolean confirmacion;
 
+	@Transient
+	private Long id_actuador;
+
 	public Comando() {
 		super();
+	}
+
+	public Comando(Long id, String tipo, Date fechaHora, Date desde, Date hasta, boolean confirmacion,
+			Long id_actuador) {
+		super();
+		this.id = id;
+		this.tipo = tipo;
+		this.fechaHora = fechaHora;
+		this.desde = desde;
+		this.hasta = hasta;
+		this.confirmacion = confirmacion;
+		this.id_actuador = id_actuador;
 	}
 
 	public Comando(Long id, String tipo, Date fechaHora, Date desde, Date hasta, boolean confirmacion) {
