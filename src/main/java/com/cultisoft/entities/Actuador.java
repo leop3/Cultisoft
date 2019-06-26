@@ -1,7 +1,5 @@
 package com.cultisoft.entities;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "actuador")
@@ -28,24 +27,29 @@ public class Actuador {
 
 	private boolean estado;
 
-	private Date activacionDesde;
-
-	private Date activacionHasta;
+	@Transient
+	private Long idCultivo;
 
 	public Actuador() {
 		super();
 	}
 
-	public Actuador(Long id, Cultivo cultivo, String descripcion, String tipo, boolean estado, Date activacionDesde,
-			Date activacionHasta) {
+	public Actuador(Long id, Cultivo cultivo, String descripcion, String tipo, boolean estado) {
 		super();
 		this.id = id;
 		this.cultivo = cultivo;
 		this.descripcion = descripcion;
 		this.tipo = tipo;
 		this.estado = estado;
-		this.activacionDesde = activacionDesde;
-		this.activacionHasta = activacionHasta;
+	}
+
+	public Actuador(Long id, Long idCultivo, String descripcion, String tipo, boolean estado) {
+		super();
+		this.id = id;
+		this.idCultivo = idCultivo;
+		this.descripcion = descripcion;
+		this.tipo = tipo;
+		this.estado = estado;
 	}
 
 	public Long getId() {
@@ -88,27 +92,10 @@ public class Actuador {
 		this.estado = estado;
 	}
 
-	public Date getActivacionDesde() {
-		return activacionDesde;
-	}
-
-	public void setActivacionDesde(Date activacionDesde) {
-		this.activacionDesde = activacionDesde;
-	}
-
-	public Date getActivacionHasta() {
-		return activacionHasta;
-	}
-
-	public void setActivacionHasta(Date activacionHasta) {
-		this.activacionHasta = activacionHasta;
-	}
-
 	@Override
 	public String toString() {
 		return "Actuador [id=" + id + ", cultivo=" + cultivo + ", descripcion=" + descripcion + ", tipo=" + tipo
-				+ ", estado=" + estado + ", activacionDesde=" + activacionDesde + ", activacionHasta=" + activacionHasta
-				+ "]";
+				+ ", estado=" + estado + "]";
 	}
 
 }

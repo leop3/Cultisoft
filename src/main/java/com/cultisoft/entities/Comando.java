@@ -14,7 +14,6 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "comando")
 public class Comando {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -108,6 +107,22 @@ public class Comando {
 
 	public void setHasta(Date hasta) {
 		this.hasta = hasta;
+	}
+
+	public Actuador getActuador() {
+		return actuador;
+	}
+
+	public void setActuador(Actuador actuador) {
+		this.actuador = actuador;
+	}
+
+	public Long getId_actuador() {
+		return id_actuador;
+	}
+
+	public void setId_actuador(Long id_actuador) {
+		this.id_actuador = id_actuador;
 	}
 
 }

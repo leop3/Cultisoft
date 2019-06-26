@@ -7,9 +7,13 @@ from comando
  
  
  
+ drop schema cultisoft
+
+create schema cultisoft
+
  /*Set de Prueba*/
  
-insert into usuario(nombre,password) values  ("srplanta","JazMin123")
+insert into usuario(nombre,password) values  ("srplanta","JazMin123");
 insert into usuario(nombre,password) values  ("hater","plantasMalnacidas");
 insert into usuario(nombre,password) values  ("plantlover","BuenaPlantita223"); 
 
@@ -23,15 +27,18 @@ insert into cultivo(clave,descripcion,nombre,id_usuario) values ("cooc","ococ","
 
 select * from cultivo
 
+delete from cultivo where id = 7
+
+
 update cultivo set id_usuario = 3 where id = 2
 
-insert into actuador(activacion_desde,activacion_hasta,descripcion,estado,tipo,id_cultivo) values (null,null,"actuador 1",false,"tipo 1",1);
-insert into actuador(activacion_desde,activacion_hasta,descripcion,estado,tipo,id_cultivo) values (null,null,"actuador 2",false,"tipo 2",2);
-insert into actuador(activacion_desde,activacion_hasta,descripcion,estado,tipo,id_cultivo) values (null,null,"actuador 3",false,"tipo 3",2);
-insert into actuador(activacion_desde,activacion_hasta,descripcion,estado,tipo,id_cultivo) values (null,null,"actuador 4",false,"tipo 4",1);
-insert into actuador(activacion_desde,activacion_hasta,descripcion,estado,tipo,id_cultivo) values (null,null,"actuador 5",false,"tipo 5",1);
-insert into actuador(activacion_desde,activacion_hasta,descripcion,estado,tipo,id_cultivo) values (null,null,"actuador 6",false,"tipo 6",4);
-insert into actuador(activacion_desde,activacion_hasta,descripcion,estado,tipo,id_cultivo) values (null,null,"actuador 7",false,"tipo 7",2);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 1",false,"tipo 1",1);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 2",false,"tipo 2",2);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 3",false,"tipo 3",2);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 4",false,"tipo 4",1);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 5",false,"tipo 5",1);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 6",false,"tipo 6",4);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 7",false,"tipo 7",2);
  	 
 select * from actuador 
  
@@ -41,7 +48,7 @@ insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values
 insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(false,null,null,null,"tipo3",3);
 insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(false,null,null,null,"tipo4",4);
 insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(false,null,null,null,"tipo5",5);
-insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(false,null,null,null,"tipo6",8);
-insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(false,null,null,null,"tipo7",9);
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(false,null,null,null,"tipo6",6);
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(false,null,null,null,"tipo7",7);
  
 select * from comando
