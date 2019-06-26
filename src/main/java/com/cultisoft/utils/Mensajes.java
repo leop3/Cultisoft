@@ -9,4 +9,5 @@ public class Mensajes {
 	// Comandos
 	public final static String ON = "PRENDER";
 	public final static String OFF = "APAGAR";
+	public static final String ERROR = "Error:";
 }

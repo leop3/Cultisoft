@@ -22,6 +22,7 @@ import com.cultisoft.responses.ResponseComando;
 import com.cultisoft.responses.ResponseNovedades;
 import com.cultisoft.service.ActuadorService;
 import com.cultisoft.service.ComandoService;
+import com.cultisoft.service.SensorService;
 import com.cultisoft.utils.Mensajes;
 
 @RestController
@@ -33,39 +34,50 @@ public class ComandoRestController {
 
 	@Autowired(required = true)
 	ActuadorService actuadorService;
+	
+	@Autowired(required = true)
+	SensorService sensorService;
 
 	@PostMapping(path = "/novedades")
 	public ResponseNovedades getNovedades(@RequestBody NovedadesRequest nr) {
 		ResponseNovedades response = new ResponseNovedades();
-		this.guardarDatosSensores(nr.getSensores());
+		try {
+			this.guardarDatosSensores(nr.getSensores());
 
-		// Buscar comandos del usuario
-		List<Comando> comandos = this.getComandos(nr.getId());
+			// Buscar comandos del usuario
+			List<Comando> comandos = this.getComandos(nr.getId());
 
-		// Itera los comandos para ver si alguno se tiene que ejecutar
-		for (Comando com : comandos) {
-			if (this.puedeEjecutarse(com)) {
-				Actuador act = actuadorService.buscar(com.getId_actuador().toString());
-				switch (com.getTipo()) {
-				case Mensajes.ON: {
-					act.setEstado(true);
-					break;
+			// Itera los comandos para ver si alguno se tiene que ejecutar
+			for (Comando com : comandos) {
+				if (this.puedeEjecutarse(com)) {
+					Actuador act = actuadorService.buscar(com.getId_actuador().toString());
+					switch (com.getTipo()) {
+					case Mensajes.ON: {
+						act.setEstado(true);
+						break;
+					}
+					case Mensajes.OFF: {
+						act.setEstado(false);
+						break;
+					}
+					default:
+						break;
+					}
+					// Si no tiene desde y hasta se finaliza a penas se ejecuta
+					if (!this.tieneHorario(com))
+						com.setConfirmacion(true);
+					;
+					actuadorService.actualizar(act);
 				}
-				case Mensajes.OFF: {
-					act.setEstado(false);
-					break;
-				}
-				default:
-					break;
-				}
-				//Si no tiene desde y hasta se finaliza a penas se ejecuta
-				if (!this.tieneHorario(com))
-					com.setConfirmacion(true);;
-				actuadorService.actualizar(act);
+
 			}
-
+			// Envio los comandos modificados (o no )
+			response.setComandos(this.getActuadores(nr.getId()));
+			response.setMensaje(Mensajes.OK);
+		} catch (Exception e) {
+			response.setMensaje(Mensajes.ERROR);
+			response.setError(e + "");
 		}
-		response.setComandos(this.getActuadores(nr.getId()));
 		return response;
 	}
 
@@ -143,9 +155,15 @@ public class ComandoRestController {
 		}
 		return acts;
 	}
-
+	/**
+	 * Guarda los datos de los sensores para guardar un historico
+	 * @param sensores
+	 */
 	private void guardarDatosSensores(List<Sensor> sensores) {
-
+		for(Sensor sen : sensores) {
+			//TO-DO
+//			sensorService.agregar(sen);
+		}
 	}
 
 	/**
