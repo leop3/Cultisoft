@@ -35,4 +35,8 @@ public class UsuarioService {
 	public Usuario buscar(String id) {
 		return usuarioJpaRepository.findById(Long.parseLong(id));
 	}
+
+	public Usuario findByUsuario(String user) {
+		return usuarioJpaRepository.findByNombre(user);
+	}
 }

@@ -38,6 +38,14 @@ public class Cultivo {
 		this.descripcion = descripcion;
 	}
 
+	public Cultivo(Usuario usuario,String clave, String nombre, String descripcion) {
+		super();
+		this.usuario = usuario;
+		this.clave = clave;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+	}
+
 	public Long getId() {
 		return id;
 	}
