@@ -1,5 +1,6 @@
 package com.cultisoft.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,12 @@ public class CultivoRestController {
 		try {
 			Usuario usuario = usuarioService.buscar(idUsuario);
 			List<Cultivo> cultivos = cultivoService.getCultivosDeUsuario(usuario);
+			List<Cultivo> cultivosSinRepetidos = new ArrayList<>();
+			for (Cultivo cult : cultivos) {
+				if (!cult.isEliminado()) {
+					cultivosSinRepetidos.add(cult);
+				}
+			}
 			response.setCultivos(cultivos);
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
