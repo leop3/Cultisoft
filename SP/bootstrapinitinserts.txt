@@ -5,20 +5,20 @@ insert into usuario(nombre,password) values  ("hater","plantasMalnacidas");
 insert into usuario(nombre,password) values  ("plantlover","BuenaPlantita223"); 
 
  
-insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Tomate","Plantacion de tomates cherry","tomate",1);
-insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Zapallo","Zapallo amarillo","zapallo",2);
-insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Limones","Limones planta antigua","limon antiguo",2);
-insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Lechugas","Plantacion de lechuga","lechuga",3);
-insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Berenjenas","Plantacion de berenjenas","berenjena",1);
+insert into cultivo(clave,descripcion,nombre,id_usuario,eliminado) values ("Tomate","Plantacion de tomates cherry","tomate",1,false);
+insert into cultivo(clave,descripcion,nombre,id_usuario,eliminado) values ("Zapallo","Zapallo amarillo","zapallo",2,false);
+insert into cultivo(clave,descripcion,nombre,id_usuario,eliminado) values ("Limones","Limones planta antigua","limon antiguo",2,false);
+insert into cultivo(clave,descripcion,nombre,id_usuario,eliminado) values ("Lechugas","Plantacion de lechuga","lechuga",3,false);
+insert into cultivo(clave,descripcion,nombre,id_usuario,eliminado) values ("Berenjenas","Plantacion de berenjenas","berenjena",1,false);
 
 
-insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 1",false,"Humedad",1);
-insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 2",false,"Humedad",2);
-insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 3",false,"Luz",2);
-insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 4",false,"Humedad",1);
-insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 5",false,"Luz",1);
-insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 6",false,"Temperatura",4);
-insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 7",false,"Temperatura",2);
+insert into actuador(descripcion,estado,tipo,id_cultivo,eliminado) values ("actuador 1",false,"Humedad",1,false);
+insert into actuador(descripcion,estado,tipo,id_cultivo,eliminado) values ("actuador 2",false,"Humedad",2,false);
+insert into actuador(descripcion,estado,tipo,id_cultivo,eliminado) values ("actuador 3",false,"Luz",2,false);
+insert into actuador(descripcion,estado,tipo,id_cultivo,eliminado) values ("actuador 4",false,"Humedad",1,false);
+insert into actuador(descripcion,estado,tipo,id_cultivo,eliminado) values ("actuador 5",false,"Luz",1,false);
+insert into actuador(descripcion,estado,tipo,id_cultivo,eliminado) values ("actuador 6",false,"Temperatura",4,false);
+insert into actuador(descripcion,estado,tipo,id_cultivo,eliminado) values ("actuador 7",false,"Temperatura",2,false);
  	 
 
 insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Encender",1);
@@ -30,8 +30,8 @@ insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values
 insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Apagar",7);
  
 
-insert into sensor(descripcion,tipo,valor_maximo,valor_minimo,id_cultivo) values ("Sensor 1","Humedad",10,5,1);
-insert into sensor(descripcion,tipo,valor_maximo,valor_minimo,id_cultivo) values ("Sensor 2","Humedad",10,5,5);
+insert into sensor(descripcion,tipo,valor_maximo,valor_minimo,id_cultivo,eliminado) values ("Sensor 1","Humedad",10,5,1,false);
+insert into sensor(descripcion,tipo,valor_maximo,valor_minimo,id_cultivo,eliminado) values ("Sensor 2","Humedad",10,5,5,false);
 
 
 insert into estado (fecha_hora,valor,id_sensor) values ("2019-06-26",10,1);

@@ -38,6 +38,8 @@ public class Cultivo {
 	@OneToMany(mappedBy = "cultivo")
 	private List<Sensor> sensores;
 
+	private boolean eliminado;
+
 	public Cultivo() {
 	}
 
@@ -112,6 +114,14 @@ public class Cultivo {
 
 	public void setSensores(List<Sensor> sensores) {
 		this.sensores = sensores;
+	}
+
+	public boolean isEliminado() {
+		return eliminado;
+	}
+
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
 	}
 
 	@Override
