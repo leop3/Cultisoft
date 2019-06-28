@@ -48,8 +48,12 @@ public class CultivoRestController {
 		ResponseCultivo response = new ResponseCultivo();
 		try {
 			Cultivo culti = cultivoService.buscar(id);
-			response.getCultivos().add(culti);
-			response.setMensaje(Mensajes.OK);
+			if (culti.isEliminado()) {
+				response.setMensaje(Mensajes.ELIMINADO);
+			} else {
+				response.getCultivos().add(culti);
+				response.setMensaje(Mensajes.OK);
+			}
 		} catch (Exception e) {
 			response.setMensaje(Mensajes.ERROR);
 			response.setError(e + "");
@@ -78,13 +82,7 @@ public class CultivoRestController {
 		ResponseCultivo response = new ResponseCultivo();
 		try {
 			Usuario usuario = usuarioService.buscar(idUsuario);
-			List<Cultivo> cultivos = cultivoService.getCultivosDeUsuario(usuario);
-			List<Cultivo> cultivosSinRepetidos = new ArrayList<>();
-			for (Cultivo cult : cultivos) {
-				if (!cult.isEliminado()) {
-					cultivosSinRepetidos.add(cult);
-				}
-			}
+			List<Cultivo> cultivos = sacarEliminados(cultivoService.getCultivosDeUsuario(usuario));
 			response.setCultivos(cultivos);
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
@@ -92,6 +90,16 @@ public class CultivoRestController {
 			response.setError(e + "");
 		}
 		return response;
+	}
+
+	private List<Cultivo> sacarEliminados(List<Cultivo> cults) {
+		List<Cultivo> cultivosSinRepetidos = new ArrayList<>();
+		for (Cultivo cult : cults) {
+			if (!cult.isEliminado()) {
+				cultivosSinRepetidos.add(cult);
+			}
+		}
+		return cultivosSinRepetidos;
 	}
 
 	@PostMapping(path = "/modificarCultivo")
