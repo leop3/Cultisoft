@@ -1,12 +1,18 @@
 package com.cultisoft.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "sensor")
@@ -23,11 +29,30 @@ public class Sensor {
 
 	private Integer valorMaximo;
 
+	private boolean eliminado;
+
+	@Transient
+	private Integer valor;
+
 	@ManyToOne
 	@JoinColumn(name = "id_cultivo")
+	@JsonIgnore
 	private Cultivo cultivo;
 
-	public Sensor(Long id, String tipo, String descripcion, Integer valorMinimo, Integer valorMaximo,
+	@OneToMany(mappedBy = "sensor")
+	private List<Estado> estados;
+
+	public Sensor(Long id, String tipo, String descripcion, Integer valorMinimo, Integer valorMaximo, Cultivo cultivo) {
+		super();
+		this.id = id;
+		this.tipo = tipo;
+		this.descripcion = descripcion;
+		this.valorMinimo = valorMinimo;
+		this.valorMaximo = valorMaximo;
+		this.cultivo = cultivo;
+	}
+
+	public Sensor(Long id, String tipo, String descripcion, Integer valorMinimo, Integer valorMaximo, Integer valor,
 			Cultivo cultivo) {
 		super();
 		this.id = id;
@@ -35,6 +60,7 @@ public class Sensor {
 		this.descripcion = descripcion;
 		this.valorMinimo = valorMinimo;
 		this.valorMaximo = valorMaximo;
+		this.valor = valor;
 		this.cultivo = cultivo;
 	}
 
@@ -88,6 +114,30 @@ public class Sensor {
 
 	public void setCultivo(Cultivo cultivo) {
 		this.cultivo = cultivo;
+	}
+
+	public Integer getValor() {
+		return valor;
+	}
+
+	public void setValor(Integer valor) {
+		this.valor = valor;
+	}
+
+	public List<Estado> getEstados() {
+		return estados;
+	}
+
+	public void setEstados(List<Estado> estados) {
+		this.estados = estados;
+	}
+
+	public boolean isEliminado() {
+		return eliminado;
+	}
+
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
 	}
 
 }

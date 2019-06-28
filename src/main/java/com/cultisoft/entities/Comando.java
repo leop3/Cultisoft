@@ -20,7 +20,7 @@ public class Comando {
 
 	@ManyToOne
 	@JoinColumn(name = "id_actuador")
-	private Actuador actuador;
+	private Actuador  actuador;
 
 	private String tipo;
 

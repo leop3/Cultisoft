@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,16 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cultisoft.Request.NovedadesRequest;
 import com.cultisoft.entities.Actuador;
 import com.cultisoft.entities.Comando;
+import com.cultisoft.entities.Estado;
 import com.cultisoft.entities.Sensor;
 import com.cultisoft.responses.ResponseComando;
 import com.cultisoft.responses.ResponseNovedades;
 import com.cultisoft.service.ActuadorService;
 import com.cultisoft.service.ComandoService;
+import com.cultisoft.service.EstadoService;
 import com.cultisoft.service.SensorService;
 import com.cultisoft.utils.Mensajes;
 
 @RestController
 @RequestMapping("/comando")
+@CrossOrigin
 public class ComandoRestController {
 
 	@Autowired(required = true)
@@ -34,9 +38,12 @@ public class ComandoRestController {
 
 	@Autowired(required = true)
 	ActuadorService actuadorService;
-	
+
 	@Autowired(required = true)
 	SensorService sensorService;
+
+	@Autowired(required = true)
+	EstadoService estadoService;
 
 	@PostMapping(path = "/novedades")
 	public ResponseNovedades getNovedades(@RequestBody NovedadesRequest nr) {
@@ -72,7 +79,7 @@ public class ComandoRestController {
 
 			}
 			// Envio los comandos modificados (o no )
-			response.setComandos(this.getActuadores(nr.getId()));
+			response.setActuadores(this.getActuadores(nr.getId()));
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
 			response.setMensaje(Mensajes.ERROR);
@@ -92,9 +99,10 @@ public class ComandoRestController {
 		ResponseComando response = new ResponseComando();
 		try {
 			comandoService.agregar(command);
-			response.setEstado("OK");
+			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
-			response.setEstado("Error: " + e);
+			response.setMensaje(Mensajes.ERROR);
+			response.setError(e + "");
 		}
 		return response;
 	}
@@ -145,7 +153,7 @@ public class ComandoRestController {
 			cs.execute();
 			final ResultSet rs = cs.getResultSet();
 			while (rs.next()) {
-				acts.add(new Actuador(rs.getLong("id"), rs.getLong("idCultivo"), rs.getString("descripcion"),
+				acts.add(new Actuador(rs.getLong("id"), rs.getLong("id_cultivo"), rs.getString("descripcion"),
 						rs.getString("tipo"), rs.getBoolean("estado")));
 
 			}
@@ -155,14 +163,35 @@ public class ComandoRestController {
 		}
 		return acts;
 	}
+
 	/**
 	 * Guarda los datos de los sensores para guardar un historico
+	 * 
 	 * @param sensores
 	 */
 	private void guardarDatosSensores(List<Sensor> sensores) {
-		for(Sensor sen : sensores) {
-			//TO-DO
-//			sensorService.agregar(sen);
+		for (Sensor sen : sensores) {
+			Sensor sen2 = sensorService.buscar(sen.getId().toString());
+			List<Actuador> acts = sen.getCultivo().getActuadores();
+			if (sen.getValor() >= sen2.getValorMaximo() || sen.getValor() <= sen2.getValorMinimo()) {
+				activarODesactivarUmbral(sen2, acts, true);
+			} else {
+				activarODesactivarUmbral(sen2, acts, false);
+			}
+			estadoService.guardar(new Estado(sen, new Date(), sen.getValor()));
+		}
+	}
+
+	private void activarODesactivarUmbral(Sensor sen2, List<Actuador> acts, boolean estado) {
+		for (Actuador act : acts) {
+			if (act.getTipo() == sen2.getTipo()) {
+				act.setEstado(estado);
+				Comando cmd = new Comando();
+				cmd.setActuador(act);
+				cmd.setFechaHora(new Date());
+				cmd.setTipo(Mensajes.ON);
+				comandoService.agregar(new Comando());
+			}
 		}
 	}
 

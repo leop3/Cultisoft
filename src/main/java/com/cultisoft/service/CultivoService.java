@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.cultisoft.entities.Cultivo;
+import com.cultisoft.entities.Usuario;
 import com.cultisoft.repositories.CultivoJpaRepository;
 
 @Service
@@ -34,5 +35,9 @@ public class CultivoService {
 
 	public Cultivo buscar(String id) {
 		return cultivoJpaRepository.findById(Long.parseLong(id));
+	}
+
+	public List<Cultivo> getCultivosDeUsuario(Usuario us) {
+		return cultivoJpaRepository.findByUsuario(us);
 	}
 }

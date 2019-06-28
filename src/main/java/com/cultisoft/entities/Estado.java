@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "estado")
 public class Estado {
@@ -20,23 +22,29 @@ public class Estado {
 
 	@ManyToOne
 	@JoinColumn(name = "id_sensor")
+	@JsonIgnore
 	private Sensor sensor;
 
 	private Date fechaHora;
 
-	private Date desde;
-
-	private Date hasta;
-
 	private Integer valor;
 
-	public Estado(Long id, Sensor sensor, Date fechaHora, Date desde, Date hasta, Integer valor) {
+	public Estado() {
+
+	}
+
+	public Estado(Long id, Sensor sensor, Date fechaHora, Integer valor) {
 		super();
 		this.id = id;
 		this.sensor = sensor;
 		this.fechaHora = fechaHora;
-		this.desde = desde;
-		this.hasta = hasta;
+		this.valor = valor;
+	}
+
+	public Estado(Sensor sensor, Date fechaHora, Integer valor) {
+		super();
+		this.sensor = sensor;
+		this.fechaHora = fechaHora;
 		this.valor = valor;
 	}
 
@@ -64,22 +72,6 @@ public class Estado {
 		this.fechaHora = fechaHora;
 	}
 
-	public Date getDesde() {
-		return desde;
-	}
-
-	public void setDesde(Date desde) {
-		this.desde = desde;
-	}
-
-	public Date getHasta() {
-		return hasta;
-	}
-
-	public void setHasta(Date hasta) {
-		this.hasta = hasta;
-	}
-
 	public Integer getValor() {
 		return valor;
 	}
@@ -90,8 +82,7 @@ public class Estado {
 
 	@Override
 	public String toString() {
-		return "Estado [id=" + id + ", sensor=" + sensor + ", fechaHora=" + fechaHora + ", desde=" + desde + ", hasta="
-				+ hasta + ", valor=" + valor + "]";
+		return "Estado [id=" + id + ", sensor=" + sensor + ", fechaHora=" + fechaHora + ", valor=" + valor + "]";
 	}
 
 }

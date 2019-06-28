@@ -52,3 +52,9 @@ insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values
 insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(false,null,null,null,"tipo7",7);
  
 select * from comando
+
+
+insert into sensor(descripcion,tipo,valor_maximo,valor_minimo,id_cultivo) values ("Sensor 1","humedad",10,5,1)
+insert into sensor(descripcion,tipo,valor_maximo,valor_minimo,id_cultivo) values ("Sensor 2","humedad",10,5,5)
+
+select * from sensor

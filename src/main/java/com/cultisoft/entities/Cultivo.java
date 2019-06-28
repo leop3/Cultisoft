@@ -1,12 +1,17 @@
 package com.cultisoft.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "cultivo")
@@ -18,6 +23,7 @@ public class Cultivo {
 
 	@ManyToOne
 	@JoinColumn(name = "id_usuario")
+	@JsonIgnore
 	private Usuario usuario;
 
 	private String clave;
@@ -25,6 +31,12 @@ public class Cultivo {
 	private String nombre;
 
 	private String descripcion;
+
+	@OneToMany(mappedBy = "cultivo")
+	private List<Actuador> actuadores;
+
+	@OneToMany(mappedBy = "cultivo")
+	private List<Sensor> sensores;
 
 	public Cultivo() {
 	}
@@ -38,7 +50,7 @@ public class Cultivo {
 		this.descripcion = descripcion;
 	}
 
-	public Cultivo(Usuario usuario,String clave, String nombre, String descripcion) {
+	public Cultivo(Usuario usuario, String clave, String nombre, String descripcion) {
 		super();
 		this.usuario = usuario;
 		this.clave = clave;
@@ -84,6 +96,22 @@ public class Cultivo {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public List<Actuador> getActuadores() {
+		return actuadores;
+	}
+
+	public void setActuadores(List<Actuador> actuadores) {
+		this.actuadores = actuadores;
+	}
+
+	public List<Sensor> getSensores() {
+		return sensores;
+	}
+
+	public void setSensores(List<Sensor> sensores) {
+		this.sensores = sensores;
 	}
 
 	@Override

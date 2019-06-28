@@ -5,22 +5,22 @@ import java.util.List;
 import com.cultisoft.entities.Actuador;
 
 public class ResponseNovedades extends Response {
-	private List<Actuador> comandos;
+	private List<Actuador> actuadores;
 
 	public ResponseNovedades() {
 	}
 
 	public ResponseNovedades(List<Actuador> comandos) {
 		super();
-		this.comandos = comandos;
+		this.actuadores = comandos;
 	}
 
-	public List<Actuador> getComandos() {
-		return comandos;
+	public List<Actuador> getActuadores() {
+		return actuadores;
 	}
 
-	public void setComandos(List<Actuador> comandos) {
-		this.comandos = comandos;
+	public void setActuadores(List<Actuador> comandos) {
+		this.actuadores = comandos;
 	}
 
 }

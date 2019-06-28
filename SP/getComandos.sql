@@ -26,3 +26,35 @@ WHERE u.id = p_id_usuario;
 end;
 //
 DELIMITER;
+
+
+DELIMITER // 
+create procedure getActuadoresDeUnCultivo(p_id_cultivo bigint)
+begin
+select a.* from actuador a
+inner join cultivo c on a.id_cultivo = c.id
+where c.id = p_id_cultivo;
+end;
+//
+DELIMITER;
+
+DELIMITER // 
+create procedure getSensoresDeUnCultivo(p_id_sensor bigint)
+begin
+select s.* from sensor s
+inner join cultivo c on s.id_cultivo = c.id
+where c.id = p_id_cultivo;
+end;
+//
+DELIMITER;
+
+
+DELIMITER // 
+create procedure getCultivosDeUnUsuario(p_id_usuario bigint)
+begin
+select c.* from cultivo c
+inner join usuario u on c.id_usuario = u.id
+where u.id = p_id_usuario;
+end;
+//
+DELIMITER;

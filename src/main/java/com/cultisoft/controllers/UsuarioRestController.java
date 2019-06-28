@@ -1,6 +1,7 @@
 package com.cultisoft.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import com.cultisoft.service.UsuarioService;
 
 @RestController
 @RequestMapping("/usuario")
+@CrossOrigin
 public class UsuarioRestController {
 
 	@Autowired(required = true)
@@ -26,6 +28,7 @@ public class UsuarioRestController {
 			if (us != null) {
 				if (us.getPassword().equals(login.getPassword())) {
 					response.setMensaje("Logueado");
+					response.setUsuario(us);
 				} else {
 					response.setMensaje("Incorrecto");
 				}

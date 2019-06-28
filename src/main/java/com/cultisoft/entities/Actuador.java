@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "actuador")
 public class Actuador {
@@ -19,6 +21,7 @@ public class Actuador {
 
 	@ManyToOne
 	@JoinColumn(name = "id_cultivo")
+	@JsonIgnore
 	private Cultivo cultivo;
 
 	private String descripcion;
@@ -29,6 +32,8 @@ public class Actuador {
 
 	@Transient
 	private Long idCultivo;
+
+	private boolean eliminado;
 
 	public Actuador() {
 		super();
@@ -90,6 +95,22 @@ public class Actuador {
 
 	public void setEstado(boolean estado) {
 		this.estado = estado;
+	}
+
+	public Long getIdCultivo() {
+		return idCultivo;
+	}
+
+	public void setIdCultivo(Long idCultivo) {
+		this.idCultivo = idCultivo;
+	}
+
+	public boolean isEliminado() {
+		return eliminado;
+	}
+
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
 	}
 
 	@Override
