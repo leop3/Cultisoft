@@ -1,0 +1,57 @@
+ /*Set de Prueba*/
+ 
+insert into usuario(nombre,password) values  ("srplanta","JazMin123");
+insert into usuario(nombre,password) values  ("hater","plantasMalnacidas");
+insert into usuario(nombre,password) values  ("plantlover","BuenaPlantita223"); 
+
+ 
+insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Tomate","Plantacion de tomates cherry","tomate",1);
+insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Zapallo","Zapallo amarillo","zapallo",2);
+insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Limones","Limones planta antigua","limon antiguo",2);
+insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Lechugas","Plantacion de lechuga","lechuga",3);
+insert into cultivo(clave,descripcion,nombre,id_usuario) values ("Berenjenas","Plantacion de berenjenas","berenjena",1);
+
+
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 1",false,"Humedad",1);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 2",false,"Humedad",2);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 3",false,"Luz",2);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 4",false,"Humedad",1);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 5",false,"Luz",1);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 6",false,"Temperatura",4);
+insert into actuador(descripcion,estado,tipo,id_cultivo) values ("actuador 7",false,"Temperatura",2);
+ 	 
+
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Encender",1);
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Apagar",2);
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Encender",3);
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Apagar",4);
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Encender",5);
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Encender",6);
+insert into comando(confirmacion,desde,fecha_hora,hasta,tipo,id_actuador) values(true,null,null,null,"Apagar",7);
+ 
+
+insert into sensor(descripcion,tipo,valor_maximo,valor_minimo,id_cultivo) values ("Sensor 1","Humedad",10,5,1);
+insert into sensor(descripcion,tipo,valor_maximo,valor_minimo,id_cultivo) values ("Sensor 2","Humedad",10,5,5);
+
+
+insert into estado (fecha_hora,valor,id_sensor) values ("2019-06-26",10,1);
+insert into estado (fecha_hora,valor,id_sensor) values ("2019-06-26",10,1);
+insert into estado (fecha_hora,valor,id_sensor) values ("2019-06-25",10,1);
+insert into estado (fecha_hora,valor,id_sensor) values ("2019-06-24",10,1);
+insert into estado (fecha_hora,valor,id_sensor) values ("2019-06-26",10,2);
+insert into estado (fecha_hora,valor,id_sensor) values ("2019-06-27",10,2);
+
+
+/*Obtener los comandos que no estan finalizados que pertenezcan a un usuario*/
+DELIMITER // 
+create procedure getComandos(p_id_usuario bigint)
+begin
+SELECT comando.id,comando.id_actuador AS idActuador,comando.desde,comando.hasta,comando.tipo,comando.fecha_hora AS fechaHora,comando.confirmacion
+FROM 				comando
+INNER JOIN 		actuador ON comando.id_actuador = actuador.id
+INNER JOIN 		cultivo ON actuador.id_cultivo = cultivo.id
+INNER JOIN 		usuario ON cultivo.id_usuario = usuario.id
+WHERE usuario.id = p_id_usuario AND comando.confirmacion is not true;
+end;
+//
+DELIMITER;
