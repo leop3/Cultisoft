@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "comando")
 public class Comando {
@@ -20,7 +22,8 @@ public class Comando {
 
 	@ManyToOne
 	@JoinColumn(name = "id_actuador")
-	private Actuador  actuador;
+	@JsonIgnore
+	private Actuador actuador;
 
 	private String tipo;
 

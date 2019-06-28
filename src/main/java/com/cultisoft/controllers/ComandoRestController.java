@@ -98,6 +98,8 @@ public class ComandoRestController {
 	public ResponseComando recibirComando(@RequestBody Comando command) {
 		ResponseComando response = new ResponseComando();
 		try {
+			Actuador actuador = actuadorService.buscar(command.getId_actuador().toString());
+			command.setActuador(actuador);
 			comandoService.agregar(command);
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {

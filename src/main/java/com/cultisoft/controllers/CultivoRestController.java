@@ -61,6 +61,26 @@ public class CultivoRestController {
 		}
 		return response;
 	}
+	
+	@PostMapping(path = "/getCultivo")
+	public ResponseCultivo getCultivo(@RequestBody String cultivoId) {
+		ResponseCultivo response = new ResponseCultivo();
+		try {
+			Cultivo culti = cultivoService.buscar(cultivoId);
+			if (culti.isEliminado()) {
+				response.setMensaje(Mensajes.ELIMINADO);
+			} else {
+				response.getCultivos().add(culti);
+				List<Cultivo> cultivos = sacarEliminados(response.getCultivos());
+				response.setCultivos(cultivos);
+				response.setMensaje(Mensajes.OK);
+			}
+		} catch (Exception e) {
+			response.setMensaje(Mensajes.ERROR);
+			response.setError(e + "");
+		}
+		return response;
+	}
 
 	@PostMapping(path = "/insertCultivo")
 	public Response insertarCultivo(@RequestBody CultivoRequest cr) {

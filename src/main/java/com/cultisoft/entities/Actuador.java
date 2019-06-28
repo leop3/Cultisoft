@@ -1,11 +1,14 @@
 package com.cultisoft.entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -34,6 +37,9 @@ public class Actuador {
 	private Long idCultivo;
 
 	private boolean eliminado;
+	
+	@OneToMany(mappedBy = "actuador")
+	private List<Comando> comandos;
 
 	public Actuador() {
 		super();
@@ -113,6 +119,14 @@ public class Actuador {
 		this.eliminado = eliminado;
 	}
 
+	public List<Comando> getComandos() {
+		return comandos;
+	}
+
+	public void setComandos(List<Comando> comandos) {
+		this.comandos = comandos;
+	}
+	
 	@Override
 	public String toString() {
 		return "Actuador [id=" + id + ", cultivo=" + cultivo + ", descripcion=" + descripcion + ", tipo=" + tipo
