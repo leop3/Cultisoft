@@ -11,6 +11,7 @@ import com.cultisoft.Request.LoginRequest;
 import com.cultisoft.entities.Usuario;
 import com.cultisoft.responses.ResponseUsuario;
 import com.cultisoft.service.UsuarioService;
+import com.cultisoft.utils.Mensajes;
 
 @RestController
 @RequestMapping("/usuario")
@@ -27,16 +28,16 @@ public class UsuarioRestController {
 			Usuario us = usuarioService.findByUsuario(login.getUsuario());
 			if (us != null) {
 				if (us.getPassword().equals(login.getPassword())) {
-					response.setMensaje("Logueado");
+					response.setMensaje(Mensajes.LOGIN);
 					response.setUsuario(us);
 				} else {
-					response.setMensaje("Incorrecto");
+					response.setMensaje(Mensajes.INCORRECTO);
 				}
 			} else {
-				response.setMensaje("Incorrecto");
+				response.setMensaje(Mensajes.INCORRECTO);
 			}
 		} catch (Exception e) {
-			response.setMensaje("Error");
+			response.setMensaje(Mensajes.ERROR);
 			response.setError(e + "");
 		}
 		return response;

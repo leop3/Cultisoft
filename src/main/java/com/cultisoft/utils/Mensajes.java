@@ -5,7 +5,7 @@ public class Mensajes {
 	public final static String OK = "Ok";
 	public final static String LOGIN = "Logueado";
 	public final static String INCORRECTO = "Incorrecto";
-	public final static String  INSERTADO= "Incorrecto";
+	public final static String  INSERTADO= "Insertado";
 
 	// Comandos
 	public final static String ON = "PRENDER";
