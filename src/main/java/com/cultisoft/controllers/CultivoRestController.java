@@ -2,6 +2,7 @@ package com.cultisoft.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -67,8 +68,8 @@ public class CultivoRestController {
 		try {
 			Cultivo cultivo = new Cultivo(cr.getUser(usuarioService), cr.getClave(), cr.getNombre(),
 					cr.getDescripcion());
-			guardarSensoresYActuadores(cultivo);
-			cultivoService.agregar(cultivo);
+			Cultivo nuevoCultivo = cultivoService.agregar(cultivo);
+			guardarSensoresYActuadores(nuevoCultivo, cultivo.getSensores(), cultivo.getActuadores());
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
 			response.setMensaje(Mensajes.ERROR);
@@ -97,6 +98,10 @@ public class CultivoRestController {
 		for (Cultivo cult : cults) {
 			if (!cult.isEliminado()) {
 				cultivosSinRepetidos.add(cult);
+				cult.setSensores(cult.getSensores().stream().filter(sensor -> !sensor.isEliminado())
+						.collect(Collectors.toList()));
+				cult.setActuadores(cult.getActuadores().stream().filter(actuador -> !actuador.isEliminado())
+						.collect(Collectors.toList()));
 			}
 		}
 		return cultivosSinRepetidos;
@@ -106,8 +111,12 @@ public class CultivoRestController {
 	public Response modificarCultivo(@RequestBody Cultivo cultivo) {
 		Response response = new Response();
 		try {
-			guardarSensoresYActuadores(cultivo);
-			cultivoService.actualizar(cultivo);
+			Cultivo original = cultivoService.buscar(cultivo.getId().toString());
+			original.setNombre(cultivo.getNombre());
+			original.setDescripcion(cultivo.getDescripcion());
+			original.setEliminado(cultivo.isEliminado());
+			cultivoService.actualizar(original);
+			guardarSensoresYActuadores(original, cultivo.getSensores(), cultivo.getActuadores());
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
 			response.setMensaje(Mensajes.ERROR);
@@ -116,19 +125,35 @@ public class CultivoRestController {
 		return response;
 	}
 
-	private void guardarSensoresYActuadores(Cultivo cultivo) {
-		for (Sensor sen : cultivo.getSensores()) {
-			if (sen.getId() == null) {
-				sensorService.agregar(sen);
-			} else {
-				sensorService.actualizar(sen);
+	private void guardarSensoresYActuadores(Cultivo cultivo, List<Sensor> sensores, List<Actuador> actuadores) {
+		if (sensores != null) {
+			for (Sensor sen : sensores) {
+				if (sen.getId() == null) {
+					sen.setCultivo(cultivo);
+					sensorService.agregar(sen);
+				} else {
+					Sensor original = sensorService.buscar(sen.getId().toString());
+					original.setDescripcion(sen.getDescripcion());
+					original.setEliminado(sen.isEliminado());
+					original.setTipo(sen.getTipo());
+					original.setValorMaximo(sen.getValorMaximo());
+					original.setValorMinimo(sen.getValorMinimo());
+					sensorService.actualizar(original);
+				}
 			}
 		}
-		for (Actuador act : cultivo.getActuadores()) {
-			if (act.getId() == null) {
-				actuadorService.agregar(act);
-			} else {
-				actuadorService.actualizar(act);
+		if (actuadores != null) {
+			for (Actuador act : actuadores) {
+				if (act.getId() == null) {
+					act.setCultivo(cultivo);
+					actuadorService.agregar(act);
+				} else {
+					Actuador original = actuadorService.buscar(act.getId().toString());
+					original.setDescripcion(act.getDescripcion());
+					original.setTipo(act.getTipo());
+					original.setEliminado(act.isEliminado());
+					actuadorService.actualizar(original);
+				}
 			}
 		}
 	}
