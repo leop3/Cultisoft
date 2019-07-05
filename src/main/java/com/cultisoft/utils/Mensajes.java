@@ -9,8 +9,8 @@ public class Mensajes {
 	public final static String ELIMINADO = "Eliminado";
 
 	// Comandos
-	public final static String ON = "PRENDER";
-	public final static String OFF = "APAGAR";
+	public final static String ON = "Prender";
+	public final static String OFF = "Apagar";
 	public static final String ERROR = "IError:";
 
 }

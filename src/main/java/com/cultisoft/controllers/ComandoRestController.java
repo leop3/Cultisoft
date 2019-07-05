@@ -18,14 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cultisoft.Request.NovedadesRequest;
 import com.cultisoft.entities.Actuador;
 import com.cultisoft.entities.Comando;
+import com.cultisoft.entities.Cultivo;
 import com.cultisoft.entities.Estado;
 import com.cultisoft.entities.Sensor;
+import com.cultisoft.entities.Usuario;
 import com.cultisoft.responses.ResponseComando;
 import com.cultisoft.responses.ResponseNovedades;
 import com.cultisoft.service.ActuadorService;
 import com.cultisoft.service.ComandoService;
+import com.cultisoft.service.CultivoService;
 import com.cultisoft.service.EstadoService;
 import com.cultisoft.service.SensorService;
+import com.cultisoft.service.UsuarioService;
 import com.cultisoft.utils.Mensajes;
 
 @RestController
@@ -44,6 +48,9 @@ public class ComandoRestController {
 
 	@Autowired(required = true)
 	EstadoService estadoService;
+
+	@Autowired(required = true)
+	CultivoService cultivoService;
 
 	@PostMapping(path = "/novedades")
 	public ResponseNovedades getNovedades(@RequestBody NovedadesRequest nr) {
@@ -79,7 +86,10 @@ public class ComandoRestController {
 
 			}
 			// Envio los comandos modificados (o no )
-			response.setActuadores(this.getActuadores(nr.getId()));
+			Cultivo cultivo = cultivoService.buscar(nr.getId().toString());
+			// response.setActuadores(this.getActuadores(nr.getId()));
+			response.setActuadores(cultivo.getActuadores());
+
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
 			response.setMensaje(Mensajes.ERROR);
@@ -174,20 +184,26 @@ public class ComandoRestController {
 	private void guardarDatosSensores(List<Sensor> sensores) {
 		for (Sensor sen : sensores) {
 			Sensor sen2 = sensorService.buscar(sen.getId().toString());
-			List<Actuador> acts = sen.getCultivo().getActuadores();
-			if (sen.getValor() >= sen2.getValorMaximo() || sen.getValor() <= sen2.getValorMinimo()) {
-				activarODesactivarUmbral(sen2, acts, true);
-			} else {
-				activarODesactivarUmbral(sen2, acts, false);
+			List<Actuador> acts = sen2.getCultivo().getActuadores();
+
+			boolean enUmbral = true;
+			if (sen2.getValorMaximo() != null && sen.getValor() >= sen2.getValorMaximo()) {
+				enUmbral = false;
 			}
+			if (sen2.getValorMinimo() != null && sen.getValor() <= sen2.getValorMinimo()) {
+				enUmbral = false;
+			}
+
+			activarODesactivarUmbral(sen2, acts, enUmbral);
+
 			estadoService.guardar(new Estado(sen, new Date(), sen.getValor()));
 		}
 	}
 
-	private void activarODesactivarUmbral(Sensor sen2, List<Actuador> acts, boolean estado) {
+	private void activarODesactivarUmbral(Sensor sen2, List<Actuador> acts, boolean enUmbral) {
 		for (Actuador act : acts) {
 			if (act.getTipo() == sen2.getTipo()) {
-				act.setEstado(estado);
+				act.setEstado(!enUmbral);
 				Comando cmd = new Comando();
 				cmd.setActuador(act);
 				cmd.setFechaHora(new Date());
@@ -209,7 +225,7 @@ public class ComandoRestController {
 
 	private boolean dentroDeSuHorario(Comando com) {
 		if (tieneHorario(com)) {
-			return com.getDesde().before(new Date()) && com.getHasta().after(new Date());
+			return (new Date(com.getDesde().getTime()).before(new Date()) && new Date(com.getHasta().getTime()).after(new Date()));
 		}
 		return false;
 	}
