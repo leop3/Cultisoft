@@ -86,7 +86,9 @@ public class ComandoRestController {
 			// Envio los comandos modificados (o no )
 			Cultivo cultivo = cultivoService.buscar(nr.getId().toString());
 			// response.setActuadores(this.getActuadores(nr.getId()));
-			response.setActuadores(cultivo.getActuadores());
+			if (cultivo.getActuadores() != null) {
+				response.setActuadores(limpiarActuadoresParaSS(cultivo.getActuadores()));
+			}
 
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
@@ -96,6 +98,16 @@ public class ComandoRestController {
 		return response;
 	}
 
+	private List<Actuador> limpiarActuadoresParaSS(List<Actuador> actuadores) {
+		List<Actuador> nuevaLista = new ArrayList<Actuador>();
+		for (Actuador actuador : actuadores) {
+			Actuador nuevoActuador = new Actuador();
+			nuevoActuador.setId(actuador.getId());
+			nuevoActuador.setEstado(actuador.isEstado());
+			nuevaLista.add(nuevoActuador);
+		}
+		return nuevaLista;
+	}
 	/**
 	 * Método para recibir los comandos enviados por los usuarios
 	 * 
@@ -191,22 +203,31 @@ public class ComandoRestController {
 			if (sen2.getValorMinimo() != null && sen.getValor() <= sen2.getValorMinimo()) {
 				enUmbral = false;
 			}
-
-			activarODesactivarUmbral(sen2, acts, enUmbral);
-
+			
+			if (sen2.getTipo() != null) {
+				activarODesactivarUmbral(sen2, acts, enUmbral);
+			}
 			estadoService.guardar(new Estado(sen, new Date(), sen.getValor()));
 		}
 	}
 
 	private void activarODesactivarUmbral(Sensor sen2, List<Actuador> acts, boolean enUmbral) {
+		OUTER_LOOP:
 		for (Actuador act : acts) {
-			if (act.getTipo() == sen2.getTipo()) {
-				act.setEstado(!enUmbral);
-				Comando cmd = new Comando();
-				cmd.setActuador(act);
-				cmd.setFechaHora(new Date());
-				cmd.setTipo(Mensajes.ON);
-				comandoService.agregar(new Comando());
+			if (sen2.getTipo().equalsIgnoreCase(act.getTipo())) {
+				for (Comando comando : act.getComandos()) {
+					if (dentroDeSuHorario(comando)) {
+						continue OUTER_LOOP;
+					}
+				}
+				if (act.isEstado() == enUmbral) {
+					act.setEstado(!enUmbral);
+					Comando cmd = new Comando();
+					cmd.setActuador(act);
+					cmd.setFechaHora(new Date());
+					cmd.setTipo(enUmbral ? Mensajes.OFF :  Mensajes.ON );
+					comandoService.agregar(cmd);
+				}
 			}
 		}
 	}
@@ -218,7 +239,7 @@ public class ComandoRestController {
 	 * @return
 	 */
 	private boolean puedeEjecutarse(Comando com) {
-		return (this.dentroDeSuHorario(com)) || (!this.tieneHorario(com));
+		return !this.tieneHorario(com) || this.dentroDeSuHorario(com);
 	}
 
 	private boolean dentroDeSuHorario(Comando com) {
