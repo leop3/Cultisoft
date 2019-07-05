@@ -21,7 +21,6 @@ import com.cultisoft.entities.Comando;
 import com.cultisoft.entities.Cultivo;
 import com.cultisoft.entities.Estado;
 import com.cultisoft.entities.Sensor;
-import com.cultisoft.entities.Usuario;
 import com.cultisoft.responses.ResponseComando;
 import com.cultisoft.responses.ResponseNovedades;
 import com.cultisoft.service.ActuadorService;
@@ -29,7 +28,6 @@ import com.cultisoft.service.ComandoService;
 import com.cultisoft.service.CultivoService;
 import com.cultisoft.service.EstadoService;
 import com.cultisoft.service.SensorService;
-import com.cultisoft.service.UsuarioService;
 import com.cultisoft.utils.Mensajes;
 
 @RestController
