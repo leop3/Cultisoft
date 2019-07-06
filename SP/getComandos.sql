@@ -1,4 +1,13 @@
-
+DELIMITER // 
+create procedure getComandosPorActuador(p_actuador_id bigint)
+begin
+select comando.id,comando.id_actuador AS idActuador,comando.desde,comando.hasta,comando.tipo,comando.fecha_hora AS fechaHora,comando.confirmacion from comando
+inner join actuador act on comando.id_actuador = act.id
+where act.id = p_actuador_id
+order by comando.id desc;
+end;
+//
+DELIMITER;
 /*Obtener los comandos que no estan finalizados que pertenezcan a un usuario*/
 DELIMITER // 
 create procedure getComandos(p_id_usuario bigint)

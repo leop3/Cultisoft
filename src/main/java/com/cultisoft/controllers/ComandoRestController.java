@@ -56,37 +56,39 @@ public class ComandoRestController {
 		try {
 			this.guardarDatosSensores(nr.getSensores());
 
-			// Buscar comandos del usuario
-			List<Comando> comandos = this.getComandos(nr.getId());
-
-			// Itera los comandos para ver si alguno se tiene que ejecutar
-			for (Comando com : comandos) {
-				if (this.puedeEjecutarse(com)) {
-					Actuador act = actuadorService.buscar(com.getId_actuador().toString());
-					switch (com.getTipo()) {
-					case Mensajes.ON: {
-						act.setEstado(true);
-						break;
-					}
-					case Mensajes.OFF: {
-						act.setEstado(false);
-						break;
-					}
-					default:
-						break;
-					}
-					// Si no tiene desde y hasta se finaliza a penas se ejecuta
-					if (!this.tieneHorario(com))
-						com.setConfirmacion(true);
-					;
-					actuadorService.actualizar(act);
-				}
-
-			}
-			// Envio los comandos modificados (o no )
 			Cultivo cultivo = cultivoService.buscar(nr.getId().toString());
-			// response.setActuadores(this.getActuadores(nr.getId()));
+
 			if (cultivo.getActuadores() != null) {
+				for (Actuador actuador : cultivo.getActuadores()) {
+					List<Comando> comandos = getComandos(actuador.getId().toString());
+
+					// Itera los comandos para ver si alguno se tiene que ejecutar
+					for (Comando com : comandos) {
+						if (!puedeEjecutarseDesde(com)) {
+							continue;
+						}
+						if (!com.isConfirmacion() && puedeEjecutarse(com)) {
+							switch (com.getTipo()) {
+							case Mensajes.ON:
+								actuador.setEstado(true);
+								break;
+							case Mensajes.OFF:
+								actuador.setEstado(false);
+								break;
+							}
+							com.setConfirmacion(true);
+							// Envio los comandos modificados (o no )
+							actuadorService.actualizar(actuador);
+						} else if (seTermina(com)) {
+							actuador.setEstado(false);
+							com.setConfirmacion(true);
+							actuadorService.actualizar(actuador);
+						}
+						break;
+					}
+				}
+				// Buscar comandos del usuario
+
 				response.setActuadores(limpiarActuadoresParaSS(cultivo.getActuadores()));
 			}
 
@@ -108,6 +110,7 @@ public class ComandoRestController {
 		}
 		return nuevaLista;
 	}
+
 	/**
 	 * Método para recibir los comandos enviados por los usuarios
 	 * 
@@ -147,7 +150,7 @@ public class ComandoRestController {
 		List<Comando> commands = new ArrayList<>();
 		try {
 			Connection conn = this.conectar();
-			CallableStatement cs = conn.prepareCall("{call getComandos(?)}");
+			CallableStatement cs = conn.prepareCall("{call getComandosPorActuador(?)}");
 			cs.setLong(1, Long.parseLong(id));
 			cs.execute();
 			final ResultSet rs = cs.getResultSet();
@@ -203,7 +206,7 @@ public class ComandoRestController {
 			if (sen2.getValorMinimo() != null && sen.getValor() <= sen2.getValorMinimo()) {
 				enUmbral = false;
 			}
-			
+
 			if (sen2.getTipo() != null) {
 				activarODesactivarUmbral(sen2, acts, enUmbral);
 			}
@@ -212,25 +215,30 @@ public class ComandoRestController {
 	}
 
 	private void activarODesactivarUmbral(Sensor sen2, List<Actuador> acts, boolean enUmbral) {
-		OUTER_LOOP:
-		for (Actuador act : acts) {
+		OUTER_LOOP: for (Actuador act : acts) {
 			if (sen2.getTipo().equalsIgnoreCase(act.getTipo())) {
-				for (Comando comando : act.getComandos()) {
-					if (dentroDeSuHorario(comando)) {
+				List<Comando> comandos = getComandos(act.getId().toString());
+				for (Comando comando : comandos) {
+					if (!puedeEjecutarseDesde(comando)) {
+						continue;
+					}
+					if (comando.getHasta() != null && dentroDeSuHorario(comando)) {
 						continue OUTER_LOOP;
 					}
+					break;
 				}
 				if (act.isEstado() == enUmbral) {
 					act.setEstado(!enUmbral);
 					Comando cmd = new Comando();
 					cmd.setActuador(act);
 					cmd.setFechaHora(new Date());
-					cmd.setTipo(enUmbral ? Mensajes.OFF :  Mensajes.ON );
+					cmd.setTipo(enUmbral ? Mensajes.OFF : Mensajes.ON);
 					comandoService.agregar(cmd);
 				}
 			}
 		}
 	}
+
 
 	/**
 	 * Comprueba si se puede ejecutar
@@ -242,9 +250,18 @@ public class ComandoRestController {
 		return !this.tieneHorario(com) || this.dentroDeSuHorario(com);
 	}
 
+	private boolean puedeEjecutarseDesde(Comando com) {
+		return com.getDesde() == null || new Date(com.getDesde().getTime()).before(new Date());
+	}
+	
+	private boolean seTermina(Comando com) {
+		return com.getHasta() != null && new Date(com.getHasta().getTime()).before(new Date());
+	}
+
 	private boolean dentroDeSuHorario(Comando com) {
 		if (tieneHorario(com)) {
-			return (new Date(com.getDesde().getTime()).before(new Date()) && new Date(com.getHasta().getTime()).after(new Date()));
+			return (new Date(com.getDesde().getTime()).before(new Date())
+					&& new Date(com.getHasta().getTime()).after(new Date()));
 		}
 		return false;
 	}
