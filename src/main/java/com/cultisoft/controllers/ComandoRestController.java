@@ -55,7 +55,7 @@ public class ComandoRestController {
 		ResponseNovedades response = new ResponseNovedades();
 		try {
 			Cultivo cultivo = cultivoService.buscar(nr.getId().toString());
-			
+
 			guardarDatosSensores(cultivo, nr.getSensores());
 
 			if (cultivo.getActuadores() != null) {
@@ -63,10 +63,8 @@ public class ComandoRestController {
 					List<Comando> comandos = getComandos(actuador.getId().toString());
 
 					// Itera los comandos para ver si alguno se tiene que ejecutar
-					for (Comando com : comandos) {
-						if (!puedeEjecutarseDesde(com)) {
-							continue;
-						}
+					Comando com = ultimoComando(comandos);
+					if (com != null) {
 						if (!com.isConfirmacion() && puedeEjecutarse(com)) {
 							switch (com.getTipo()) {
 							case Mensajes.ON:
@@ -77,14 +75,20 @@ public class ComandoRestController {
 								break;
 							}
 							com.setConfirmacion(true);
+							com.setActuador(actuador);
+
+							System.out.println("comando");
+							System.out.println(com.getId());
+							System.out.println(actuador.getDescripcion());
+							System.out.println(com.getTipo());
+
 							// Envio los comandos modificados (o no )
 							actuadorService.actualizar(actuador);
-						} else if (seTermina(com)) {
-							actuador.setEstado(false);
-							com.setConfirmacion(true);
-							actuadorService.actualizar(actuador);
+							comandoService.actualizar(com);
 						}
-						break;
+					} else if (actuador.isEstado()) {
+						actuador.setEstado(false);
+						actuadorService.actualizar(actuador);
 					}
 				}
 				// Buscar comandos del usuario
@@ -98,6 +102,51 @@ public class ComandoRestController {
 			response.setError(e + "");
 		}
 		return response;
+	}
+
+	private Comando ultimoComandoEjecutable(List<Comando> comandos) {
+		Comando ultimo = ultimoComandoTemporal(comandos);
+
+		// Itera los comandos para ver si alguno se tiene que ejecutar
+		for (Comando comando : comandos) {
+			if (puedeEjecutarse(comando)) {
+				if (ultimo == null || comando.getDesde() != null) {
+					return comando;
+				} else if (comando.getFechaHora() != null
+						&& new Date(comando.getFechaHora().getTime()).after(new Date(ultimo.getHasta().getTime()))) {
+					return comando;
+				}
+			}
+		}
+		return null;
+	}
+
+	private Comando ultimoComando(List<Comando> comandos) {
+		// Itera los comandos para ver si alguno se tiene que ejecutar
+		for (Comando comando : comandos) {
+			if (comando.getDesde() != null) {
+				if (puedeEjecutarse(comando)) {
+					return comando;
+				} else {
+					return ultimoComandoEjecutable(comandos);
+				}
+			}
+		}
+		return ultimoComandoEjecutable(comandos);
+	}
+
+	private Comando ultimoComandoTemporal(List<Comando> comandos) {
+		// Itera los comandos para ver si alguno se tiene que ejecutar
+		for (Comando comando : comandos) {
+			if (comando.getDesde() != null) {
+				if (puedeEjecutarseDesde(comando)) {
+					return comando;
+				} else {
+					return null;
+				}
+			}
+		}
+		return null;
 	}
 
 	private List<Actuador> limpiarActuadoresParaSS(List<Actuador> actuadores) {
@@ -159,7 +208,6 @@ public class ComandoRestController {
 						rs.getDate("desde"), rs.getDate("hasta"), rs.getBoolean("confirmacion"),
 						rs.getLong("idActuador")));
 			}
-			System.out.println(commands);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -182,7 +230,6 @@ public class ComandoRestController {
 						rs.getString("tipo"), rs.getBoolean("estado")));
 
 			}
-			System.out.println(acts);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -195,8 +242,11 @@ public class ComandoRestController {
 	 * @param sensores
 	 */
 	private void guardarDatosSensores(Cultivo cultivo, List<Sensor> sensores) {
-		
+
 		for (Sensor sensor : cultivo.getSensores()) {
+			if (sensor.isEliminado()) {
+				continue;
+			}
 			for (Sensor sensorEstado : sensores) {
 				if (sensor.getId() == sensorEstado.getId()) {
 					boolean enUmbral = true;
@@ -206,7 +256,7 @@ public class ComandoRestController {
 					if (sensor.getValorMinimo() != null && sensorEstado.getValor() < sensor.getValorMinimo()) {
 						enUmbral = false;
 					}
-	
+
 					if (sensor.getTipo() != null) {
 						activarODesactivarUmbral(sensor, cultivo.getActuadores(), enUmbral);
 					}
@@ -218,20 +268,20 @@ public class ComandoRestController {
 	}
 
 	private void activarODesactivarUmbral(Sensor sensor, List<Actuador> acts, boolean enUmbral) {
-		OUTER_LOOP: for (Actuador act : acts) {
-			if (sensor.getTipo().equalsIgnoreCase(act.getTipo())) {
+		for (Actuador act : acts) {
+			if (!act.isEliminado() && sensor.getTipo().equalsIgnoreCase(act.getTipo())) {
 				List<Comando> comandos = getComandos(act.getId().toString());
-				for (Comando comando : comandos) {
-					if (!puedeEjecutarseDesde(comando)) {
-						continue;
-					}
-					if (comando.getHasta() != null && dentroDeSuHorario(comando)) {
-						continue OUTER_LOOP;
-					}
-					break;
+
+				Comando comando = ultimoComando(comandos);
+				if (comando != null && comando.getHasta() != null) {
+					continue;
 				}
+
 				if (act.isEstado() == enUmbral) {
-					act.setEstado(!enUmbral);
+					System.out.println(sensor.getDescripcion());
+					System.out.println(act.getDescripcion());
+					System.out.println(enUmbral ? Mensajes.OFF : Mensajes.ON);
+
 					Comando cmd = new Comando();
 					cmd.setActuador(act);
 					cmd.setFechaHora(new Date());
@@ -241,7 +291,6 @@ public class ComandoRestController {
 			}
 		}
 	}
-
 
 	/**
 	 * Comprueba si se puede ejecutar
@@ -256,7 +305,7 @@ public class ComandoRestController {
 	private boolean puedeEjecutarseDesde(Comando com) {
 		return com.getDesde() == null || new Date(com.getDesde().getTime()).before(new Date());
 	}
-	
+
 	private boolean seTermina(Comando com) {
 		return com.getHasta() != null && new Date(com.getHasta().getTime()).before(new Date());
 	}
@@ -272,4 +321,5 @@ public class ComandoRestController {
 	private boolean tieneHorario(Comando com) {
 		return com.getDesde() != null && com.getHasta() != null;
 	}
+
 }
