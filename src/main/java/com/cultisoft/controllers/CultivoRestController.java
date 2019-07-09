@@ -89,7 +89,7 @@ public class CultivoRestController {
 			Cultivo cultivo = new Cultivo(cr.getUser(usuarioService), cr.getClave(), cr.getNombre(),
 					cr.getDescripcion());
 			Cultivo nuevoCultivo = cultivoService.agregar(cultivo);
-			guardarSensoresYActuadores(nuevoCultivo, cultivo.getSensores(), cultivo.getActuadores());
+			guardarSensoresYActuadores(nuevoCultivo, cr.getSensores(), cr.getActuadores());
 			response.setMensaje(Mensajes.OK);
 		} catch (Exception e) {
 			response.setMensaje(Mensajes.ERROR);

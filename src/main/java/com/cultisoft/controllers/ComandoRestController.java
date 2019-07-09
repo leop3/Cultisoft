@@ -54,9 +54,9 @@ public class ComandoRestController {
 	public ResponseNovedades getNovedades(@RequestBody NovedadesRequest nr) {
 		ResponseNovedades response = new ResponseNovedades();
 		try {
-			this.guardarDatosSensores(nr.getSensores());
-
 			Cultivo cultivo = cultivoService.buscar(nr.getId().toString());
+			
+			guardarDatosSensores(cultivo, nr.getSensores());
 
 			if (cultivo.getActuadores() != null) {
 				for (Actuador actuador : cultivo.getActuadores()) {
@@ -194,29 +194,32 @@ public class ComandoRestController {
 	 * 
 	 * @param sensores
 	 */
-	private void guardarDatosSensores(List<Sensor> sensores) {
-		for (Sensor sen : sensores) {
-			Sensor sen2 = sensorService.buscar(sen.getId().toString());
-			List<Actuador> acts = sen2.getCultivo().getActuadores();
-
-			boolean enUmbral = true;
-			if (sen2.getValorMaximo() != null && sen.getValor() >= sen2.getValorMaximo()) {
-				enUmbral = false;
+	private void guardarDatosSensores(Cultivo cultivo, List<Sensor> sensores) {
+		
+		for (Sensor sensor : cultivo.getSensores()) {
+			for (Sensor sensorEstado : sensores) {
+				if (sensor.getId() == sensorEstado.getId()) {
+					boolean enUmbral = true;
+					if (sensor.getValorMaximo() != null && sensorEstado.getValor() > sensor.getValorMaximo()) {
+						enUmbral = false;
+					}
+					if (sensor.getValorMinimo() != null && sensorEstado.getValor() < sensor.getValorMinimo()) {
+						enUmbral = false;
+					}
+	
+					if (sensor.getTipo() != null) {
+						activarODesactivarUmbral(sensor, cultivo.getActuadores(), enUmbral);
+					}
+					estadoService.guardar(new Estado(sensor, new Date(), sensorEstado.getValor()));
+					break;
+				}
 			}
-			if (sen2.getValorMinimo() != null && sen.getValor() <= sen2.getValorMinimo()) {
-				enUmbral = false;
-			}
-
-			if (sen2.getTipo() != null) {
-				activarODesactivarUmbral(sen2, acts, enUmbral);
-			}
-			estadoService.guardar(new Estado(sen, new Date(), sen.getValor()));
 		}
 	}
 
-	private void activarODesactivarUmbral(Sensor sen2, List<Actuador> acts, boolean enUmbral) {
+	private void activarODesactivarUmbral(Sensor sensor, List<Actuador> acts, boolean enUmbral) {
 		OUTER_LOOP: for (Actuador act : acts) {
-			if (sen2.getTipo().equalsIgnoreCase(act.getTipo())) {
+			if (sensor.getTipo().equalsIgnoreCase(act.getTipo())) {
 				List<Comando> comandos = getComandos(act.getId().toString());
 				for (Comando comando : comandos) {
 					if (!puedeEjecutarseDesde(comando)) {
