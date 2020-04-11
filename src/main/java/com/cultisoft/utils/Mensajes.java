@@ -7,6 +7,8 @@ public class Mensajes {
 	public final static String INCORRECTO = "Incorrecto";
 	public final static String INSERTADO = "Insertado";
 	public final static String ELIMINADO = "Eliminado";
+	public final static String VACIO = "No existe";
+	
 
 	// Comandos
 	public final static String ON = "Prender";

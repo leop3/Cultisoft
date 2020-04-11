@@ -2,6 +2,7 @@ package com.cultisoft.entities;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,6 +39,7 @@ public class Cultivo {
 	@OneToMany(mappedBy = "cultivo")
 	private List<Sensor> sensores;
 
+	@Column(columnDefinition = "Bool not null default false")
 	private boolean eliminado;
 
 	public Cultivo() {

@@ -49,7 +49,9 @@ public class CultivoRestController {
 		ResponseCultivo response = new ResponseCultivo();
 		try {
 			Cultivo culti = cultivoService.buscar(id);
-			if (culti.isEliminado()) {
+			if (culti == null) {
+				response.setMensaje(Mensajes.VACIO);
+			} else if (culti.isEliminado()) {
 				response.setMensaje(Mensajes.ELIMINADO);
 			} else {
 				response.getCultivos().add(culti);
@@ -61,7 +63,7 @@ public class CultivoRestController {
 		}
 		return response;
 	}
-	
+
 	@PostMapping(path = "/getCultivo")
 	public ResponseCultivo getCultivo(@RequestBody String cultivoId) {
 		ResponseCultivo response = new ResponseCultivo();

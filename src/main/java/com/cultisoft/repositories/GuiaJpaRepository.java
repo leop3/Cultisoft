@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cultisoft.entities.Guia;
 
-@Repository("GuiaJpaRepository")
+@Repository("guiaJpaRepository")
 public interface GuiaJpaRepository extends JpaRepository<Guia, Serializable> {
 
 }
