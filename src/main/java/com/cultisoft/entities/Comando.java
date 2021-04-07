@@ -13,6 +13,19 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 @Entity
 @Table(name = "comando")
 public class Comando {
@@ -38,10 +51,6 @@ public class Comando {
 	@Transient
 	private Long id_actuador;
 
-	public Comando() {
-		super();
-	}
-
 	public Comando(Long id, String tipo, Date fechaHora, Date desde, Date hasta, boolean confirmacion,
 			Long id_actuador) {
 		super();
@@ -62,70 +71,6 @@ public class Comando {
 		this.desde = desde;
 		this.hasta = hasta;
 		this.confirmacion = confirmacion;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public boolean isConfirmacion() {
-		return this.confirmacion;
-	}
-
-	public void setConfirmacion(boolean confirmacion) {
-		this.confirmacion = confirmacion;
-	}
-
-	public Date getFechaHora() {
-		return fechaHora;
-	}
-
-	public void setFechaHora(Date fechaHora) {
-		this.fechaHora = fechaHora;
-	}
-
-	public Date getDesde() {
-		return desde;
-	}
-
-	public void setDesde(Date desde) {
-		this.desde = desde;
-	}
-
-	public Date getHasta() {
-		return hasta;
-	}
-
-	public void setHasta(Date hasta) {
-		this.hasta = hasta;
-	}
-
-	public Actuador getActuador() {
-		return actuador;
-	}
-
-	public void setActuador(Actuador actuador) {
-		this.actuador = actuador;
-	}
-
-	public Long getId_actuador() {
-		return id_actuador;
-	}
-
-	public void setId_actuador(Long id_actuador) {
-		this.id_actuador = id_actuador;
 	}
 
 }

@@ -33,7 +33,7 @@ public class UsuarioService {
 	}
 
 	public Usuario buscar(String id) {
-		return usuarioJpaRepository.findById(Long.parseLong(id));
+		return usuarioJpaRepository.findById(Long.parseLong(id)).orElse(null);
 	}
 
 	public Usuario findByUsuario(String user) {

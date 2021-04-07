@@ -12,6 +12,19 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 @Entity
 @Table(name = "estado")
 public class Estado {
@@ -29,60 +42,11 @@ public class Estado {
 
 	private Integer valor;
 
-	public Estado() {
-
-	}
-
-	public Estado(Long id, Sensor sensor, Date fechaHora, Integer valor) {
-		super();
-		this.id = id;
-		this.sensor = sensor;
-		this.fechaHora = fechaHora;
-		this.valor = valor;
-	}
-
 	public Estado(Sensor sensor, Date fechaHora, Integer valor) {
 		super();
 		this.sensor = sensor;
 		this.fechaHora = fechaHora;
 		this.valor = valor;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Sensor getSensor() {
-		return sensor;
-	}
-
-	public void setSensor(Sensor sensor) {
-		this.sensor = sensor;
-	}
-
-	public Date getFechaHora() {
-		return fechaHora;
-	}
-
-	public void setFechaHora(Date fechaHora) {
-		this.fechaHora = fechaHora;
-	}
-
-	public Integer getValor() {
-		return valor;
-	}
-
-	public void setValor(Integer valor) {
-		this.valor = valor;
-	}
-
-	@Override
-	public String toString() {
-		return "Estado [id=" + id + ", sensor=" + sensor + ", fechaHora=" + fechaHora + ", valor=" + valor + "]";
 	}
 
 }

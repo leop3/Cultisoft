@@ -15,6 +15,17 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "sensor")
 public class Sensor {
@@ -64,82 +75,6 @@ public class Sensor {
 		this.valorMaximo = valorMaximo;
 		this.valor = valor;
 		this.cultivo = cultivo;
-	}
-
-	public Sensor() {
-		super();
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public Integer getValorMinimo() {
-		return valorMinimo;
-	}
-
-	public void setValorMinimo(Integer valorMinimo) {
-		this.valorMinimo = valorMinimo;
-	}
-
-	public Integer getValorMaximo() {
-		return valorMaximo;
-	}
-
-	public void setValorMaximo(Integer valorMaximo) {
-		this.valorMaximo = valorMaximo;
-	}
-
-	public Cultivo getCultivo() {
-		return cultivo;
-	}
-
-	public void setCultivo(Cultivo cultivo) {
-		this.cultivo = cultivo;
-	}
-
-	public Integer getValor() {
-		return valor;
-	}
-
-	public void setValor(Integer valor) {
-		this.valor = valor;
-	}
-
-	public List<Estado> getEstados() {
-		return estados;
-	}
-
-	public void setEstados(List<Estado> estados) {
-		this.estados = estados;
-	}
-
-	public boolean isEliminado() {
-		return eliminado;
-	}
-
-	public void setEliminado(boolean eliminado) {
-		this.eliminado = eliminado;
 	}
 
 }

@@ -1,21 +1,27 @@
 package com.cultisoft.responses;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.cultisoft.entities.Guia;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResponseGuia extends Response {
 
-	List<Guia> guia = new ArrayList<>();
+	@JsonInclude(Include.NON_NULL)
+	List<Guia> guias;
 
-	public List<Guia> getGuia() {
-		return guia;
-	}
-
-	public void setGuia(List<Guia> guia) {
-		this.guia = guia;
-	}
+	@JsonInclude(Include.NON_NULL)
+	Guia guia;
 
 	@Override
 	public String toString() {

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("com.cultisoft.entities")
 @ComponentScan("com.cultisoft.controllers")
 @ComponentScan("com.cultisoft.service")
+@ComponentScan("com.cultisoft.converter")
 public class CultiSoftPdsApplication {
 
 	public static void main(String[] args) {

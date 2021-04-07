@@ -14,6 +14,19 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 @Entity
 @Table(name = "cultivo")
 public class Cultivo {
@@ -42,9 +55,6 @@ public class Cultivo {
 	@Column(columnDefinition = "Bool not null default false")
 	private boolean eliminado;
 
-	public Cultivo() {
-	}
-
 	public Cultivo(Long id, Usuario usuario, String clave, String nombre, String descripcion) {
 		super();
 		this.id = id;
@@ -62,73 +72,4 @@ public class Cultivo {
 		this.descripcion = descripcion;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getClave() {
-		return clave;
-	}
-
-	public void setClave(String clave) {
-		this.clave = clave;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
-	public List<Actuador> getActuadores() {
-		return actuadores;
-	}
-
-	public void setActuadores(List<Actuador> actuadores) {
-		this.actuadores = actuadores;
-	}
-
-	public List<Sensor> getSensores() {
-		return sensores;
-	}
-
-	public void setSensores(List<Sensor> sensores) {
-		this.sensores = sensores;
-	}
-
-	public boolean isEliminado() {
-		return eliminado;
-	}
-
-	public void setEliminado(boolean eliminado) {
-		this.eliminado = eliminado;
-	}
-
-	@Override
-	public String toString() {
-		return "Cultivo [id=" + id + ", usuario=" + usuario + ", clave=" + clave + ", nombre=" + nombre
-				+ ", descripcion=" + descripcion + "]";
-	}
 }

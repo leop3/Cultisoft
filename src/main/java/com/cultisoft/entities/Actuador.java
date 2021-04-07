@@ -15,6 +15,19 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 @Entity
 @Table(name = "actuador")
 public class Actuador {
@@ -39,13 +52,9 @@ public class Actuador {
 
 	@Column(columnDefinition = "Bool not null default false")
 	private boolean eliminado;
-	
+
 	@OneToMany(mappedBy = "actuador")
 	private List<Comando> comandos;
-
-	public Actuador() {
-		super();
-	}
 
 	public Actuador(Long id, Cultivo cultivo, String descripcion, String tipo, boolean estado) {
 		super();
@@ -63,76 +72,6 @@ public class Actuador {
 		this.descripcion = descripcion;
 		this.tipo = tipo;
 		this.estado = estado;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public Cultivo getCultivo() {
-		return cultivo;
-	}
-
-	public void setCultivo(Cultivo cultivo) {
-		this.cultivo = cultivo;
-	}
-
-	public boolean isEstado() {
-		return estado;
-	}
-
-	public void setEstado(boolean estado) {
-		this.estado = estado;
-	}
-
-	public Long getIdCultivo() {
-		return idCultivo;
-	}
-
-	public void setIdCultivo(Long idCultivo) {
-		this.idCultivo = idCultivo;
-	}
-
-	public boolean isEliminado() {
-		return eliminado;
-	}
-
-	public void setEliminado(boolean eliminado) {
-		this.eliminado = eliminado;
-	}
-
-	public List<Comando> getComandos() {
-		return comandos;
-	}
-
-	public void setComandos(List<Comando> comandos) {
-		this.comandos = comandos;
-	}
-	
-	@Override
-	public String toString() {
-		return "Actuador [id=" + id + ", cultivo=" + cultivo + ", descripcion=" + descripcion + ", tipo=" + tipo
-				+ ", estado=" + estado + "]";
 	}
 
 }
